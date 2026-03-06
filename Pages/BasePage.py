@@ -114,7 +114,7 @@ class BasePage:
     def wait_for_clickable(self, locator_key, timeout=10, **kwargs):
         """Wait until the element located by the key is clickable and return it."""
         by = self._by(locator_key)
-        value = self._locator_value(locator_key)
+        value = self._locator_value(locator_key, **kwargs)
 
         try:
             return WebDriverWait(self.driver, timeout).until(
@@ -155,6 +155,10 @@ class BasePage:
                 f"Timeout after {timeout}s waiting for PRESENT: "
                 f"{locator_key} -> ({by}, {value})"
             ) from e
+
+    def open_module(self, module: str, timeout=10):
+        element = self.wait_for_clickable("menuLink_XPATH", timeout=timeout, module=module)
+        element.click()
 
     def scroll_into_view(self, element):
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
